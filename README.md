@@ -53,8 +53,6 @@ $ git bulk fetch
 
 ![fetchdemo](https://cloud.githubusercontent.com/assets/876604/23709805/e8178406-041a-11e7-9a0c-01de5fbf8944.png)
 
-Remove a registered workspaces:
-
   Run a git command on only one workspace an its repositories:
 
 ```bash
@@ -66,6 +64,8 @@ $ git bulk -w personal fetch
 ```bash
 $ git bulk -g fetch
 ```
+
+  Remove a registered workspaces:
 
 ```bash
 $ git bulk --removeworkspace personal
