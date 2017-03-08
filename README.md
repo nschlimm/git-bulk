@@ -43,22 +43,7 @@ Run a git command on the repositories:
 
 ```bash
 $ git bulk fetch
-
-Executing bulk operation in workspace /Users/niklasschlimm/workspaces/personal
-Current repository: /Users/niklasschlimm/workspaces/personal/bashunit
--> executing git fetch
-Current repository: /Users/niklasschlimm/workspaces/personal/git-bulk
--> executing git fetch
-Current repository: /Users/niklasschlimm/workspaces/personal/shellscripts
--> executing git fetch
-Current repository: /Users/niklasschlimm/workspaces/personal/supergitclient
--> executing git fetch
-remote: Counting objects: 6, done.
-remote: Compressing objects: 100% (6/6), done.
-remote: Total 6 (delta 3), reused 0 (delta 0), pack-reused 0
-Unpacking objects: 100% (6/6), done.
-From github.com:nschlimm/supergitclient
-   7f7e3bc..45bff06  master     -> origin/master
-$
 ```
+
+![fetchdemo](https://cloud.githubusercontent.com/assets/876604/23709805/e8178406-041a-11e7-9a0c-01de5fbf8944.png)
 
