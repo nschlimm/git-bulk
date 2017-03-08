@@ -55,6 +55,18 @@ $ git bulk fetch
 
 Remove a registered workspaces:
 
+  Run a git command on only one workspace an its repositories:
+
+```bash
+$ git bulk -w personal fetch
+```
+
+  Run a git command but ask user for confirmation on every execution (guarded mode):
+
+```bash
+$ git bulk -g fetch
+```
+
 ```bash
 $ git bulk --removeworkspace personal
 ```
