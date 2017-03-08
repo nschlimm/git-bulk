@@ -38,6 +38,11 @@ assertCheckContains "bash git-bulk.sh --addcurrent testws" "git config --global 
 # correct git command
 assertContains "bash git-bulk.sh status -s" "executing"
 
+git config --global bulkworkspaces.testws "testdir"
+assertContains "bash git-bulk.sh -w testws status -s" "Executing"
+git config --global --remove-section bulkworkspaces
+assertContains "bash git-bulk.sh -w persona status -s" "unknown workspace name"
+
 # test correct listing of repos
 git config --global bulkworkspaces.testws "testdir"
 assertContains "bash git-bulk.sh --listall" "testws"

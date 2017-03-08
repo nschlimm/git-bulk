@@ -1,15 +1,17 @@
-#!/bin/sh
+#!/usr/bin/env bash
 invers=`tput rev`
 reset=`tput sgr0`
 txtbld=$(tput bold)             # Bold
 bldred=${txtbld}$(tput setaf 1) #  red
 shopt -s extglob
+guarded=false
+singlemode=false
 
 #
 # print usage message
 #
 usage() {
-  echo 1>&2 "usage: git bulk [-g] <git command>"
+  echo 1>&2 "usage: git bulk [-g] [-w <ws-name>] <git command>"
   echo 1>&2 "       git bulk --addworkspace <ws-name> <ws-root-directory>"
   echo 1>&2 "       git bulk --removeworkspace <ws-name> <ws-root-directory>"
   echo 1>&2 "       git bulk --addcurrent <ws-name>"
@@ -44,7 +46,7 @@ function listWSDir () {
 
 # atomic execution of a git command in one specific repository
 function guardedExecution () {
-  if [[ $guarded ]]; then
+  if $guarded; then
     echo -n "${invers}git $gitcommand${reset} -> execute here (y/n)? "
     read -n 1 -r </dev/tty; echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -63,8 +65,8 @@ function atomicExecution () {
 
 # check if the passed command is known as a core git command
 function checkGitCommand () {
-  if git help -a | cat | grep -o "$corecommand"; then
-    echo "Core command $corecommand accepted."
+  if git help -a | cat | grep -o -q "$corecommand"; then
+    echo "Core command \"$corecommand\" accepted."
   else
     usage
     echo "error: unknown GIT command: $corecommand"
@@ -72,10 +74,26 @@ function checkGitCommand () {
   fi
 }
 
+# check if workspace name is registered
+function checkWSName () {
+  found=0
+  while read workspace; do
+    cwsname=$(echo $workspace | cut -f1 -d' ' | cut -f2 -d'.')
+    if [[ $cwsname == $wsname ]]; then return; fi
+  done <<< "$(echo $(listWSDir))"
+  # when here the ws name was not found
+  echo "error: unknown workspace name: $wsname"
+  exit 1 
+}
+
 # execute the bulk operation
 function executBulkOp () {
-  clear
+  if $singlemode; then
+    echo "Selected single workspace mode in workspace: $wsname"
+  fi
   listWSDir | while read workspacespec; do
+    cwsname=$(echo $workspacespec | cut -f1 -d' ' | cut -f2 -d'.')
+    if $singlemode && $cwsname != $wsname ]]; then continue; fi
     wslocation=$(echo $workspacespec | cut -f2 -d' ')
     eval cd "$wslocation"
     actual=$(pwd)
@@ -93,6 +111,12 @@ function executBulkOp () {
 
 initialcount="${#}"
 initialarguments="${@}"
+
+# if no arguments show registered workspaces
+if [[ $initialcount -le 0 ]]; then
+  listWSDir
+fi
+
 # parse command parameters
 while [ "${#}" -ge 1 ] ; do
 
@@ -127,6 +151,12 @@ while [ "${#}" -ge 1 ] ; do
       ;;
     -g)
       guarded=true
+      ;;
+    -w)
+      singlemode=true
+      shift
+      wsname="$1"
+      checkWSName
       ;;
     -*)
 	  usage
