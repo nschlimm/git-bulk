@@ -28,7 +28,7 @@ usage: git bulk [-g] <git command>
 Register a workspace so that `git bulk` knows about it:
 
 ```bash
-$ git bulk --addworkspace myworkspace ~/workspaces/myeclipseworkspace
+$ git bulk --addworkspace personal ~/workspaces/personal
 ```
 
 List all registered workspaces:
