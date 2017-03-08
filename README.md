@@ -20,7 +20,7 @@ usage: git bulk [-g] <git command>
 
 # installation
 
-1. get the git-bulk.sh
+1. get the `git-bulk.sh`
 2. create symlink like `ln -s <path to script>/git-bulk.sh /usr/local/bin/git-bulk`
 3. make the git-bulk.sh script executable with `chmod -u+x <path to script>/git-bulk.sh`
 
