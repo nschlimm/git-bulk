@@ -32,6 +32,12 @@ Register a workspace so that `git bulk` knows about it:
 $ git bulk --addworkspace personal ~/workspaces/personal
 ```
 
+Register the current directory as a workspace to `git bulk`
+
+```bash
+$ git bulk --addcurrent personal
+```
+
 List all registered workspaces:
 
 ```bash
@@ -47,3 +53,13 @@ $ git bulk fetch
 
 ![fetchdemo](https://cloud.githubusercontent.com/assets/876604/23709805/e8178406-041a-11e7-9a0c-01de5fbf8944.png)
 
+Remove a registered workspaces:
+
+```bash
+$ git bulk --removeworkspace personal
+```
+Remove all registered workspaces:
+
+```bash
+$ git bulk --purge
+```
