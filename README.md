@@ -10,7 +10,7 @@
 
 # usage
 ```bash
-usage: git bulk [-g] <git command>
+usage: git bulk [-g] [-w <ws-name>] <git command>
        git bulk --addworkspace <ws-name> <ws-root-directory>
        git bulk --removeworkspace <ws-name>
        git bulk --addcurrent <ws-name>
