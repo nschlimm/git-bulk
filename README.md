@@ -62,5 +62,3 @@ From github.com:nschlimm/supergitclient
 $
 ```
 
-git bulk status -s
-
