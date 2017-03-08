@@ -9,14 +9,15 @@
 * use the "guarded mode" to check on each execution
 
 # usage
-
+```bash
 usage: git bulk [-g] <git command>
        git bulk --addworkspace <ws-name> <ws-root-directory>
        git bulk --removeworkspace <ws-name> <ws-root-directory>
        git bulk --addcurrent <ws-name>
        git bulk --purge
        git bulk --listall
-       
+```
+
 # installation
 
 1. get the git-bulk.sh
