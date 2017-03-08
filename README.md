@@ -12,7 +12,7 @@
 ```bash
 usage: git bulk [-g] <git command>
        git bulk --addworkspace <ws-name> <ws-root-directory>
-       git bulk --removeworkspace <ws-name> <ws-root-directory>
+       git bulk --removeworkspace <ws-name>
        git bulk --addcurrent <ws-name>
        git bulk --purge
        git bulk --listall
@@ -53,7 +53,7 @@ $ git bulk fetch
 
 ![fetchdemo](https://cloud.githubusercontent.com/assets/876604/23709805/e8178406-041a-11e7-9a0c-01de5fbf8944.png)
 
-  Run a git command on only one workspace an its repositories:
+  Run a git command on only one workspace and its repositories:
 
 ```bash
 $ git bulk -w personal fetch
@@ -65,7 +65,7 @@ $ git bulk -w personal fetch
 $ git bulk -g fetch
 ```
 
-  Remove a registered workspaces:
+  Remove a registered workspace:
 
 ```bash
 $ git bulk --removeworkspace personal
