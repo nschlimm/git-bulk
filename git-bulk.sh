@@ -61,6 +61,7 @@ function atomicExecution () {
   git $gitcommand
 }
 
+# check if the passed command is known as a core git command
 function checkGitCommand () {
   if git help -a | cat | grep -o "$corecommand"; then
     echo "Core command $corecommand accepted."
@@ -71,7 +72,7 @@ function checkGitCommand () {
   fi
 }
 
-# execute the bul operation
+# execute the bulk operation
 function executBulkOp () {
   clear
   listWSDir | while read workspacespec; do
