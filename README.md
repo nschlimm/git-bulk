@@ -4,7 +4,7 @@
 
 # features
 
-* simply add workspaces that contain multiple git repos in their directory structure
+* simply register workspaces that contain multiple git repos in their directory structure
 * run any git command on the repositories of the registered workspaces in one command to `git bulk`
 * use the "guarded mode" to check on each execution
 
