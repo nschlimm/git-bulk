@@ -20,27 +20,28 @@ usage() {
 }
 
 # add another workspace to global git config
-function addWSDir () {
+function addworkspace () {
   git config --global bulkworkspaces.$wsname "$wsdir"
 }
 
 # add current directory
-function addCurrWSDir () {
+function addcurrent () {
   git config --global bulkworkspaces.$wsname "$PWD"
 }
 
 # remove workspace from global git config
-function remWSDir () {
+function removeworkspace () {
+  checkWSName
   git config --global --unset bulkworkspaces.$wsname
 }
 
 # remove workspace from global git config
-function purgeWS () {
+function purge () {
   git config --global --remove-section bulkworkspaces
 }
 
 # list all current workspace locations defined
-function listWSDir () {
+function listall () {
   git config --global --get-regexp bulkworkspaces
 }
 
@@ -80,18 +81,30 @@ function checkWSName () {
   while read workspace; do
     cwsname=$(echo $workspace | cut -f1 -d' ' | cut -f2 -d'.')
     if [[ $cwsname == $wsname ]]; then return; fi
-  done <<< "$(echo "$(listWSDir)")"
+  done <<< "$(echo "$(listall)")"
   # when here the ws name was not found
+  usage
   echo "error: unknown workspace name: $wsname"
   exit 1 
 }
 
+# helper to check number of arguments
+function allowedargcount () {
+  if [[ $initialcount -ne $1 ]]; then
+    usage
+    echo 1>&2 "error: wrong number of arguments"
+    exit 1
+  fi 
+}
+
 # execute the bulk operation
 function executBulkOp () {
+  checkGitCommand
   if $singlemode; then
     echo "Selected single workspace mode in workspace: $wsname"
+    checkWSName
   fi
-  listWSDir | while read workspacespec; do
+  listall | while read workspacespec; do
     cwsname=$(echo $workspacespec | cut -f1 -d' ' | cut -f2 -d'.')
     if $singlemode && [[ $cwsname != $wsname ]]; then continue; fi
     wslocation=$(echo $workspacespec | cut -f2 -d' ')
@@ -102,7 +115,7 @@ function executBulkOp () {
       gitrepodir=${line::${#line}-5} # cut the .git part of find results to have the root git directory of that repository
       eval cd "$gitrepodir" # into git repo location
       curdir=$(pwd)
-      echo "Current repository: ${curdir%/*}/${bldred}${curdir##*/}${reset}"
+      echo "Current repository: ${actual#${curdir%/*}}/${bldred}${curdir##*/}${reset}"
       guardedExecution
       eval cd "$wslocation" # back to origin location of last find command
     done 
@@ -114,66 +127,44 @@ initialarguments="${@}"
 
 # if no arguments show registered workspaces
 if [[ $initialcount -le 0 ]]; then
-  listWSDir
+  listall
 fi
 
 # parse command parameters
 while [ "${#}" -ge 1 ] ; do
 
   case "$1" in
-    --listall)
-      butilcommand="listWSDir"
-      break
-      ;;
-    --purge)
-      butilcommand="purgeWS"
-      break
-      ;;
-    --removeworkspace)
-      shift
-      wsname="$1"
-      butilcommand="remWSDir"
-      break
-      ;;
-    --addcurrent)
-      shift
-      wsname="$1"
-      butilcommand="addCurrWSDir"
-      break
-      ;;
-    --addworkspace)
+    --listall|--purge|--removeworkspace|--addcurrent|--addworkspace)
+      butilcommand="${1:2}"
       shift
       wsname="$1"
       shift
       wsdir="$1"
-      butilcommand="addWSDir"
       break
       ;;
-    -g)
+    -g) 
       guarded=true
       ;;
-      -w)
+    -w) 
       singlemode=true
       shift
       wsname="$1"
       checkWSName
       ;;
-    -*)
+    -*) 
       usage
       echo 1>&2 "error: unknown argument $1"
       exit 1
       ;;
-    --*)
+    --*) 
       usage
       echo 1>&2 "error: unknown argument $1"
       exit 1
       ;;
-    *)
+    *) # git core commands
       butilcommand="executBulkOp"
       corecommand="$1"
       gitcommand="$@"
-      checkGitCommand
-      butilcommand="executBulkOp"
       break
       ;;
   esac
@@ -182,27 +173,9 @@ done
 
 # check right number of arguments
 case $butilcommand in
-  @(listWSDir|purgeWS) )
-    if [[ $initialcount -ne 1 ]]; then
-      usage
-      echo 1>&2 "error: wrong number of arguments"
-      exit 1
-    fi 
-    ;;
-  @(addCurrWSDir|remWSDir))
-    if [[ $initialcount -ne 2 ]]; then
-      usage
-      echo 1>&2 "error: wrong number of arguments"
-      exit 1
-    fi 
-    ;;
-  addWSDir)
-    if [[ $initialcount -ne 3 ]]; then
-      usage
-      echo 1>&2 "error: wrong number of arguments"
-      exit 1
-    fi 
-    ;;
+  @(listall|purge) ) allowedargcount 1;;
+  @(addcurrent|removeworkspace)) allowedargcount 2;;
+  addworkspace) allowedargcount 3;;
 esac
 
 $butilcommand # run user command

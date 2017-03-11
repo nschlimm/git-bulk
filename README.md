@@ -1,6 +1,6 @@
 # git-bulk
 
-`git bulk` adds covenien support for operations that you want to execute on multiple git repositories.
+`git bulk` adds covenient support for operations that you want to execute on multiple git repositories.
 
 # features
 

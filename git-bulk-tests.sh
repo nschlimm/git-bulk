@@ -29,6 +29,7 @@ assertContains "bash git-bulk.sh --purge carriertech" "wrong number"
 assertContains "bash git-bulk.sh -g -h ss ss" "unknown argument"
 assertContains "bash git-bulk.sh -g --listall" "wrong number"
 assertContains "bash git-bulk.sh --bla" "unknown argument"
+assertContains "bash git-bulk.sh -w -g personal status -s" "unknown workspace"
 
 # test correct
 assertCheckContains "bash git-bulk.sh --addworkspace testws bla" "git config --global --get-regexp bulkworkspaces" "bla"
@@ -38,8 +39,9 @@ assertCheckContains "bash git-bulk.sh --addcurrent testws" "git config --global 
 # correct git command
 assertContains "bash git-bulk.sh status -s" "executing"
 
-git config --global bulkworkspaces.testws "testdir"
-assertContains "bash git-bulk.sh -w testws status -s" "Executing"
+git config --global bulkworkspaces.testws1 "testdir"
+git config --global bulkworkspaces.testws2 "testdir"
+assertContains "bash git-bulk.sh -w testws2 status -s" "Executing"
 git config --global --remove-section bulkworkspaces
 assertContains "bash git-bulk.sh -w persona status -s" "unknown workspace name"
 
