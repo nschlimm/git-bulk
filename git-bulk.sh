@@ -13,7 +13,7 @@ singlemode=false
 usage() {
   echo 1>&2 "usage: git bulk [-g] [-w <ws-name>] <git command>"
   echo 1>&2 "       git bulk --addworkspace <ws-name> <ws-root-directory>"
-  echo 1>&2 "       git bulk --removeworkspace <ws-name> <ws-root-directory>"
+  echo 1>&2 "       git bulk --removeworkspace <ws-name>"
   echo 1>&2 "       git bulk --addcurrent <ws-name>"
   echo 1>&2 "       git bulk --purge"
   echo 1>&2 "       git bulk --listall"
@@ -125,9 +125,9 @@ function executBulkOp () {
 initialcount="${#}"
 initialarguments="${@}"
 
-# if no arguments show registered workspaces
+# if no arguments show usage
 if [[ $initialcount -le 0 ]]; then
-  listall
+  usage
 fi
 
 # parse command parameters
@@ -136,7 +136,7 @@ while [ "${#}" -ge 1 ] ; do
   case "$1" in
     --listall|--purge|--removeworkspace|--addcurrent|--addworkspace)
       butilcommand="${1:2}"
-      shift
+      shift 
       wsname="$1"
       shift
       wsdir="$1"
