@@ -3,7 +3,6 @@ invers=`tput rev`
 reset=`tput sgr0`
 txtbld=$(tput bold)             
 bldred=${txtbld}$(tput setaf 1) 
-shopt -s extglob
 guarded=false
 singlemode=false
 
@@ -126,8 +125,8 @@ done
 
 # check right number of arguments
 case $butilcommand in
-  @(listall|purge) ) allowedargcount 1;;
-  @(addcurrent|removeworkspace)) allowedargcount 2;;
+  listall|purge) allowedargcount 1;;
+  addcurrent|removeworkspace) allowedargcount 2;;
   addworkspace) allowedargcount 3;;
 esac
 
