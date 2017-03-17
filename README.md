@@ -10,7 +10,7 @@
 
 # usage
 ```bash
-usage: git bulk [-g] [-w <ws-name>] <git command>
+usage: git bulk [-g] ([-a]|[-w <ws-name>]) <git command>
        git bulk --addworkspace <ws-name> <ws-root-directory>
        git bulk --removeworkspace <ws-name>
        git bulk --addcurrent <ws-name>
@@ -45,7 +45,7 @@ $ git bulk --listall
 bulkworkspaces.personal /Users/niklasschlimm/workspaces/personal
 ```
 
-Run a git command on the repositories:
+Run a git command on the repositories of the current workspace:
 
 ```bash
 $ git bulk fetch
@@ -53,10 +53,16 @@ $ git bulk fetch
 
 ![fetchdemo](https://cloud.githubusercontent.com/assets/876604/23709805/e8178406-041a-11e7-9a0c-01de5fbf8944.png)
 
-  Run a git command on only one workspace and its repositories:
+  Run a git command on one specific workspace and its repositories:
 
 ```bash
 $ git bulk -w personal fetch
+```
+
+  Run a git command on all workspaces and its repositories:
+
+```bash
+$ git bulk -a status -s
 ```
 
   Run a git command but ask user for confirmation on every execution (guarded mode):

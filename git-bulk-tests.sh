@@ -1,19 +1,24 @@
 #!/bin/sh
+function finish {
+   cp ~/.gitconfigbak ~/.gitconfig # restore git config
+   rm ~/.gitconfigbak
+}
+trap finish EXIT
+cp ~/.gitconfig ~/.gitconfigbak # save git config
+
 source ../bashunit/bashunit.sh
 standardout=false
 
-cp ~/.gitconfig ~/.gitconfigbak # save git config
-
 git config --global --remove-section bulkworkspaces
 
-# test wrong commands
+# test wrong GIT commands
 assertContains "bash git-bulk.sh --addworkspac carriertech /Users/niklasschlimm/workspaces/carriertech" "unknown"
 assertContains "bash git-bulk.sh wedfwe wefwefwf" "unknown GIT"
 assertContains "bash git-bulk.sh wefwefwf" "unknown GIT"
 assertContains "bash git-bulk.sh -h" "unknown argument"
 assertContains "bash git-bulk.sh --h" "unknown argument"
 
-# test too many arguments
+# test worng usage of options and argument count
 assertContains "bash git-bulk.sh --addworkspace bla carriertech /Users/niklasschlimm/workspaces/carriertech" "wrong number"
 assertContains "bash git-bulk.sh --addworkspace bla" "wrong number"
 assertContains "bash git-bulk.sh --addworkspace" "wrong number"
@@ -31,17 +36,24 @@ assertContains "bash git-bulk.sh -g --listall" "wrong number"
 assertContains "bash git-bulk.sh --bla" "unknown argument"
 assertContains "bash git-bulk.sh -w -g personal status -s" "unknown workspace"
 
-# test correct
-assertCheckContains "bash git-bulk.sh --addworkspace testws bla" "git config --global --get-regexp bulkworkspaces" "bla"
-assertCheckNotContains "bash git-bulk.sh --removeworkspace testws" "git config --global --get-regexp bulkworkspaces" "testws"
+# test correct workspace administration
+assertCheckContains "bash git-bulk.sh --addworkspace testws1 bla" "git config --global --get-regexp bulkworkspaces" "bla"
+assertCheckContains "bash git-bulk.sh --addworkspace testws2 blub" "git config --global --get-regexp bulkworkspaces" "blub"
+assertCheckNotContains "bash git-bulk.sh --removeworkspace testws1" "git config --global --get-regexp bulkworkspaces" "testws1"
 assertCheckContains "bash git-bulk.sh --addcurrent testws" "git config --global --get-regexp bulkworkspaces" "testws"
 
 # correct git command
 assertContains "bash git-bulk.sh status -s" "executing"
+assertContains "bash git-bulk.sh -a status -s" "executing"
 
-git config --global bulkworkspaces.testws1 "testdir"
-git config --global bulkworkspaces.testws2 "testdir"
-assertContains "bash git-bulk.sh -w testws2 status -s" "Executing"
+# tests with bulk commands on workspaces
+git config --global bulkworkspaces.testws1 "~/workspaces/personal"
+git config --global bulkworkspaces.testws2 "~/workspaces/community"
+assertContains "bash git-bulk.sh -w testws2 status -s" "workspaces/community"
+assertContains "bash git-bulk.sh -a status -s" "workspaces/personal"
+assertContains "bash git-bulk.sh status -s" "workspaces/personal"
+assertContains "bash git-bulk.sh -a status -s" "workspaces/community"
+assertContains "bash git-bulk.sh -w testws2 -a" "incompatible"
 git config --global --remove-section bulkworkspaces
 assertContains "bash git-bulk.sh -w persona status -s" "unknown workspace name"
 
