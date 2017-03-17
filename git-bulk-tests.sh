@@ -54,6 +54,9 @@ assertContains "bash git-bulk.sh -a status -s" "workspaces/personal"
 assertContains "bash git-bulk.sh status -s" "workspaces/personal"
 assertContains "bash git-bulk.sh -a status -s" "workspaces/community"
 assertContains "bash git-bulk.sh -w testws2 -a" "incompatible"
+cd ..
+assertContains "bash git-bulk/git-bulk.sh status -s" "you are not"
+cd git-bulk/
 git config --global --remove-section bulkworkspaces
 assertContains "bash git-bulk.sh -w persona status -s" "unknown workspace name"
 
