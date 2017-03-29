@@ -70,6 +70,28 @@ git config --global bulkworkspaces.testws "testdir"
 assertContains "git config --global --get-regexp bulkworkspaces" "testws"
 assertCheckContains "bash git-bulk.sh --purge" "git config --global --get-regexp bulkworkspaces" "^$"
 
+# path with whitespace in repositors location
+mkdir "test test"
+cd "test test"
+git init 1>/dev/null
+cd ..
+git bulk --addcurrent testws
+assertContains "git bulk status -s" "test test"
+rm -rf "test test"
+
+# path with whitespace in workspace location
+curdir=$(pwd)
+cd ~/workspaces
+mkdir "test ws"
+cd "test ws"
+mkdir "testrepo1" && cd "testrepo1" && git init 1>/dev/null && cd ..
+mkdir "testrepo2" && cd "testrepo2" && git init 1>/dev/null && cd ..
+git bulk --addcurrent testws
+assertContains "git bulk status -s" "testrepo1"
+cd ..
+rm -rf "test ws"
+cd "$curdir"
+
 testend "git bulk tests"
 
 cp ~/.gitconfigbak ~/.gitconfig # restore git config
