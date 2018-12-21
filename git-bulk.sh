@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
-invers=$(tput rev)
-reset=$(tput sgr0)
-txtbld=$(tput bold)             
-bldred=${txtbld}$(tput setaf 1) 
+ncolors=$(tput colors)
+if [ -t 1 -a -n "$ncolors" -a $ncolors -ge 8 ]; then
+	invers=$(tput rev)
+	reset=$(tput sgr0)
+	txtbld=$(tput bold)             
+	bldred=${txtbld}$(tput setaf 1) 
+fi
 
 # default option settings
 guardedmode=false
@@ -162,3 +165,4 @@ case $butilcommand in
 esac
 
 $butilcommand # run user command
+
