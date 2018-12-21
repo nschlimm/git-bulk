@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 ncolors=$(tput colors)
-if [ -n "$ncolors" && $ncolors -ge 8 ]; then
+if [ -t 1 -a -n "$ncolors" -a $ncolors -ge 8 ]; then
 	invers=$(tput rev)
 	reset=$(tput sgr0)
 	txtbld=$(tput bold)             
